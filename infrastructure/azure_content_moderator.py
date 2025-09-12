@@ -1,17 +1,21 @@
 import httpx
 import aiohttp
+from typing import Dict
 from azure.identity.aio import DefaultAzureCredential
-from azure.core.credentials import AzureKeyCredential
 from azure.keyvault.secrets.aio import SecretClient
 
 from common.config import settings
 from common.logging import get_logger
 from common.errors import AzureModerationAPIError
 
+from domain.contracts.i_content_moderator import IContentModerator
+from domain.entities.moderation_result import ModerationResult
+from domain.exceptions import ModerationFailedError
+
 
 logger = get_logger(__name__)
 
-class AzureContentModerator:
+class AzureContentModerator(IContentModerator):
     """
     Client to interact with Azure Content Moderator API asynchronously.
     Fetches the API endpoint URL and key from Azure Key Vault using secret names
@@ -29,6 +33,7 @@ class AzureContentModerator:
         self.url = None
         self.headers = None
 
+        
         
     async def initialize(self):
         """
@@ -52,8 +57,8 @@ class AzureContentModerator:
             logger.error(f"Failed to retrieve Key Vault secrets: {e}")
             raise AzureModerationAPIError(f"Key Vault retrieval error: {e}")
 
-    async def moderate_text(self, text: str) -> dict:
-        if not self.url or not self.headers:
+    async def moderate_text(self, text: str) -> ModerationResult:
+        if not self.url or not self.headers or not self.endpoint or not self.key:
             raise AzureModerationAPIError("Content Moderator client not initialized")
 
         try:
@@ -66,8 +71,15 @@ class AzureContentModerator:
                     timeout=10
                 )
                 response.raise_for_status()
-                return response.json()
+                payload: Dict = response.json()
 
         except Exception as e:
             logger.error(f"Moderation API call failed: {e}")
-            raise AzureModerationAPIError(str(e))
+            raise ModerationFailedError(str(e))
+
+        # Determine if the content is flagged based on presence of "Terms" or "PII"
+        terms_flagged = payload.get("Terms") is not None and len(payload.get("Terms")) > 0
+        pii_flagged = payload.get("PII") is not None and len(payload.get("PII")) > 0
+        is_flagged = terms_flagged or pii_flagged
+        categories = {k: v for k, v in payload.items() if k in ("Terms", "PII", "Classification")}
+        return ModerationResult(is_flagged=is_flagged, categories=categories, raw_response=payload)

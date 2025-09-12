@@ -1,6 +1,7 @@
 from pydantic import BaseModel
+from typing import Dict, Any
 
 
-class ModerationResult(BaseModel):
+class ModerationResultDTO(BaseModel):
     is_flagged: bool
-    details: dict
+    categories: Dict[str, any]

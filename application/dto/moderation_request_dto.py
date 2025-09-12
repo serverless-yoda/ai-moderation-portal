@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 
-class ModerationRequest(BaseModel):
-    content: str
+class ModerationRequestDTO(BaseModel):
+    content: constr(min_length=1. max_length=5000)
