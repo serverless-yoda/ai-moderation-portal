@@ -13,9 +13,11 @@ class ModerationService:
         # Store the moderator instance for use in methods
         self._moderator = moderator
 
+
     # Asynchronous method to check content for moderation
     async def check_content(self, req: ModerationRequestDTO) -> ModerationResultDTO:
         # Call the Azure moderator to analyze the text
+        await self._moderator.initialize()
         domain_result: ModerationResult = await self._moderator.moderate_text(req.content)
 
 

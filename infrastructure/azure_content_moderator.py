@@ -6,7 +6,7 @@ from azure.keyvault.secrets.aio import SecretClient
 
 from common.config import settings
 from common.logging import get_logger
-from common.errors import AzureModerationAPIError
+
 
 from domain.contracts.i_content_moderator import IContentModerator
 from domain.entities.moderation_result import ModerationResult
@@ -55,11 +55,13 @@ class AzureContentModerator(IContentModerator):
                     }
         except Exception as e:
             logger.error(f"Failed to retrieve Key Vault secrets: {e}")
-            raise AzureModerationAPIError(f"Key Vault retrieval error: {e}")
+            raise ModerationFailedError(str(e))
+            
 
     async def moderate_text(self, text: str) -> ModerationResult:
         if not self.url or not self.headers or not self.endpoint or not self.key:
-            raise AzureModerationAPIError("Content Moderator client not initialized")
+            #raise Exception("Content Moderator client not initialized")
+            raise ModerationFailedError("Content Moderator client not initialized")
 
         try:
             async with httpx.AsyncClient() as client:
