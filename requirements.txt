@@ -1,0 +1,16 @@
+azure-core
+azure-identity
+azure-cognitiveservices-vision-contentmoderator
+azure-keyvault-secrets
+python-dotenv
+aiohttp
+fastapi==0.100.0
+uvicorn[standard]==0.22.0
+pydantic==2.4.1
+pydantic-settings==2.0.3
+httpx
+pytest==7.4.0
+pytest-asyncio==0.21.1
+black==23.7.0
+ruff==0.1.7
+mypy==1.5.1
