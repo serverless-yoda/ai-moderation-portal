@@ -16,9 +16,10 @@ def get_logger(name: str):
         # Define a custom log format that includes a correlation ID
         formatter = logging.Formatter("%(asctime)s [%(levelname)s] [CID:%(cid)s] %(message)s")
         
-        
         # Attach the formatter to the handler
         handler.setFormatter(formatter)
+
+        handler.addFilter(CorrelationIdFilter())
         
         # Add the handler to the logger
         logger.addHandler(handler)
@@ -31,7 +32,15 @@ def get_logger(name: str):
 
 # Custom logging filter to inject a correlation ID into each log record
 class CorrelationIdContext:
-    """Generates correlation IDs per request"""
+    current_id = "N/A"
+
     @staticmethod
     def new_id() -> str:
-        return str(uuid.uuid4())
+        CorrelationIdContext.current_id = str(uuid.uuid4())
+        return CorrelationIdContext.current_id
+
+class CorrelationIdFilter(logging.Filter):
+    def filter(self, record):
+        record.cid = getattr(CorrelationIdContext, "current_id", "N/A")
+        return True
+
