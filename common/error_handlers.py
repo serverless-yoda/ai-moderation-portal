@@ -1,3 +1,4 @@
+# common/error_handlers.py
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 from common.logging import CorrelationIdContext, get_logger

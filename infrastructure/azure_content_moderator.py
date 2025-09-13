@@ -1,3 +1,4 @@
+# infrastructure/azure_content_moderator.py
 import httpx
 import aiohttp
 from typing import Dict
@@ -79,6 +80,7 @@ class AzureContentModerator(IContentModerator):
             logger.error(f"Moderation API call failed: {e}")
             raise ModerationFailedError(str(e))
 
+        print(payload)
         # Determine if the content is flagged based on presence of "Terms" or "PII"
         terms_flagged = payload.get("Terms") is not None and len(payload.get("Terms")) > 0
         pii_flagged = payload.get("PII") is not None and len(payload.get("PII")) > 0

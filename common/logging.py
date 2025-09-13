@@ -1,3 +1,4 @@
+# common/logging.py
 # Import the logging module for logging capabilities
 # Import uuid to generate unique correlation IDs
 import logging, uuid

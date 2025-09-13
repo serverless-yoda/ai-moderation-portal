@@ -1,3 +1,4 @@
+# domain/entities/moderation_result.py
 from pydantic import BaseModel
 
 class ModerationResult(BaseModel):

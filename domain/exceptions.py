@@ -1,3 +1,4 @@
+# domain/exceptions.py
 class DomainError(Exception):
     """Based Exception for domain errors"""
 

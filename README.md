@@ -45,4 +45,7 @@ cd ai-moderation-portal
 pip install -r requirements.txt
 
 # Run the service
-uvicorn main:app --reload
+uvicorn main:app --reload --port 8000
+
+# run the streamlit test app
+streamlit run streamlit_app.py

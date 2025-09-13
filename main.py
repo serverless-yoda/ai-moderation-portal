@@ -1,3 +1,4 @@
+# main.py
 from fastapi import FastAPI
 from api.v1.routes import router
 from common.error_handlers import moderation_failed_handler, CorrelationMiddleware
@@ -11,3 +12,6 @@ app.add_exception_handler(ModerationFailedError, moderation_failed_handler)
 
 # Routers
 app.include_router(router, prefix="/api/v1")
+
+
+# note: uvicorn main:app --reload --port 8000

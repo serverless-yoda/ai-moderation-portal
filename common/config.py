@@ -1,3 +1,4 @@
+# common/config.py
 # Import BaseSettings from the pydantic-settings package (used in Pydantic v2)
 # This allows you to define a settings class that can read values from environment variables or a .env file
 from pydantic_settings import BaseSettings

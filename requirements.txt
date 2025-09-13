@@ -4,6 +4,7 @@ azure-cognitiveservices-vision-contentmoderator
 azure-keyvault-secrets
 python-dotenv
 aiohttp
+streamlit
 starlette==0.27.0
 fastapi==0.100.0
 uvicorn[standard]==0.22.0

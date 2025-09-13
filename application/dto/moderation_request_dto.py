@@ -1,3 +1,4 @@
+# application/dto/moderation_request_dto.py
 from pydantic import BaseModel, constr
 
 class ModerationRequestDTO(BaseModel):
